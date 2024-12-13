@@ -344,7 +344,7 @@ class Game {
       this.username = username;
     } else {
       alert('Имя пользователя не найдено. Возвращаем на страницу авторизации.');
-      window.location.href = 'home.html';
+      window.location.href = 'index.html';
     }
   }
 
