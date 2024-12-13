@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Курсовая работа</title>
+	<link rel="stylesheet" href="styles/global.css">
+	<link rel="stylesheet" href="styles/home.css">
+</head>
+<body>
+<section>
+	<h1>Ultra Race</h1>
+	<form id="auth-form">
+		<label for="username"></label>
+		<input
+				type="text"
+				id="username"
+				name="username"
+				required
+				placeholder="Введите ваше имя"
+		>
+		<button type="submit">Играть</button>
+	</form>
+	<div class="buttons-container">
+		<button onclick="showStatisticsPage()">
+			Статистика
+		</button>
+		<button onclick="showRulesModal()">
+			Правила
+		</button>
+	</div>
+	<div id="rules-modal" class="modal" onclick="closeRulesModal()">
+		<div class="modal-content">
+			<h2>Правила игры</h2>
+			<p><strong>1. Для начала игры:</strong> введите своё имя в соответствующее поле.</p>
+			<p><strong>2. Управление:</strong></p>
+			<ol>
+				<li>Клавиши W (стрелка вверх) — газ.</li>
+				<li>Клавиша S (стрелка вниз) — тормоз.</li>
+				<li>Мышь — для направления машины.</li>
+			</ol>
+			<p><strong>3. Формат игры:</strong> всего будет 3 заезда, каждый следующий заезд становится сложнее</p>
+			<p><strong>4. Цель:</strong> набрать максимальное количество очков.</p>
+			<p><strong>5. Начисление очков:</strong></p>
+			<ol>
+				<li>Чем быстрее вы завершите круг и чем дальше ваш противник, тем больше очков.</li>
+				<li>Если вы проигрываете раунд, очки вычитаются.</li>
+			</ol>
+		</div>
+	</div>
+</section>
+<script src="scripts/home.js"></script>
+</body>
+</html>

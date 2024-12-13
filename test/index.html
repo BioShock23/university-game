@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Гоночки</title>
+</head>
+<body>
+<canvas id="canvas" width="1000" height="1000"></canvas>
+<script>
+  function generateCircularTrack(center, radius, segments, randomFactor = 20) {
+    const points = [];
+    for (let i = 0; i < segments; i++) {
+      const angle = (2 * Math.PI * i) / segments;
+      const x = center.x + Math.cos(angle) * (radius + Math.random() * randomFactor - 10);
+      const y = center.y + Math.sin(angle) * (radius + Math.random() * randomFactor - 10);
+      points.push({ x, y });
+    }
+
+    points.push(points[0]);
+    return points;
+  }
+
+  function interpolatePoints(points, step = 0.1) {
+    const interpolated = [];
+    const n = points.length;
+
+    points.push(points[0]);
+
+    for (let i = 0; i < n - 1; i++) {
+      const p0 = points[i === 0 ? n - 2 : i - 1];
+      const p1 = points[i];
+      const p2 = points[i + 1];
+      const p3 = points[i + 2 < n ? i + 2 : 1];
+
+      for (let t = 0; t < 1; t += step) {
+        const x =
+          0.5 *
+          ((-p0.x + 3 * p1.x - 3 * p2.x + p3.x) * t ** 3 +
+            (2 * p0.x - 5 * p1.x + 4 * p2.x - p3.x) * t ** 2 +
+            (-p0.x + p2.x) * t +
+            2 * p1.x);
+
+        const y =
+          0.5 *
+          ((-p0.y + 3 * p1.y - 3 * p2.y + p3.y) * t ** 3 +
+            (2 * p0.y - 5 * p1.y + 4 * p2.y - p3.y) * t ** 2 +
+            (-p0.y + p2.y) * t +
+            2 * p1.y);
+
+        interpolated.push({ x, y });
+      }
+    }
+
+    return interpolated;
+  }
+
+
+  function drawTrack(points, color = 'blue', lineWidth = 20) {
+    ctx.beginPath();
+    for (let i = 0; i < points.length; i++) {
+      const { x, y } = points[i];
+      if (i === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    }
+    ctx.closePath();
+    ctx.strokeStyle = color;
+    ctx.lineWidth = lineWidth;
+    ctx.stroke();
+  }
+
+  function drawPoints(points, color = 'orange', radius = 5) {
+    ctx.fillStyle = color;
+    points.forEach(({ x, y }) => {
+      ctx.beginPath();
+      ctx.arc(x, y, radius, 0, 2 * Math.PI);
+      ctx.fill();
+    });
+  }
+
+
+  function distanceBetweenPoints(p1, p2) {
+    return Math.sqrt((p1.x - p2.x) ** 2 + (p1.y - p2.y) ** 2);
+  }
+
+  function isPointBetweenTrack(mousePoint, track1, threshold) {
+    let isInside = false;
+
+    for (let i = 0; i < track1.length - 1; i++) {
+      const p1 = track1[i];
+      const p2 = track1[i + 1];
+
+      const d1 = distanceBetweenPoints(mousePoint, p1);
+      const d2 = distanceBetweenPoints(mousePoint, p2);
+
+      if (d1 < threshold || d2 < threshold) {
+        console.log(Math.round(d1), Math.round(d2), p1, p2);
+        isInside = true;
+      }
+    }
+
+    return isInside;
+  }
+
+  function drawCursorStatus(isInside) {
+    ctx.fillStyle = isInside ? 'green' : 'red';
+    ctx.fillRect(10, 190, 20, 20);
+  }
+
+  function drawMouseCoordinates(x, y) {
+    ctx.fillStyle = 'black';
+    ctx.font = '16px Arial';
+    ctx.clearRect(0, 0, 200, 40);
+    ctx.fillText(`X: ${x}, Y: ${y}`, 10, 40);
+  }
+
+  function trackCursor(event) {
+    const mouseX = event.offsetX;
+    const mouseY = event.offsetY;
+    const mousePoint = { x: mouseX, y: mouseY };
+
+    const isInside = isPointBetweenTrack(mousePoint, interpolatedOriginal, 30);
+
+    drawCursorStatus(isInside);
+
+    drawMouseCoordinates(mouseX, mouseY);
+  }
+
+  const canvas = document.getElementById('canvas');
+  const ctx = canvas.getContext('2d');
+  ctx.fillStyle = 'green';
+  ctx.fillRect(0, 0, 10000, 10000);
+
+  const center = { x: 500, y: 500 };
+  const radius = 300;
+  const segments = 40;
+
+  const originalTrack = generateCircularTrack(center, radius, segments, 80);
+  
+  const interpolatedOriginal = interpolatePoints(originalTrack, 0.05);
+
+  drawTrack(interpolatedOriginal, 'gray', 60);
+  drawTrack(interpolatedOriginal, 'black', 1);
+
+  drawPoints(originalTrack, 'orange', 5);
+
+  canvas.addEventListener('mousemove', trackCursor);
+</script>
+</body>
+</html>

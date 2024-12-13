@@ -1,0 +1,51 @@
+body {
+  background-image: url("../public/main-bg.png");
+  background-attachment: fixed;
+  background-position: center;
+}
+
+h1 {
+  margin-bottom: 1rem;
+  color: white;
+}
+
+.table-container {
+  max-height: 300px;
+  overflow-y: auto;
+  display: block;
+}
+
+table {
+  width: 600px;
+  border-collapse: collapse;
+  background-color: dimgray;
+  color: white;
+}
+
+th, td {
+  width: 50%;
+  border: 1px solid #aaa;
+  padding: 8px;
+  text-align: left;
+}
+
+th {
+  background-color: #444;
+  color: white;
+}
+
+a {
+  text-decoration: none;
+  cursor: pointer;
+  margin-top: 1rem;
+  border: 1px solid #aaa;
+  padding: .5rem 1rem;
+  border-radius: .5rem;
+  transition: all 0.3s ease-in-out;
+  background-color: dimgray;
+  color: white;
+}
+
+a:hover {
+  background-color: gray;
+}
